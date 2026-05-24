@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZIYO | Admin Panel</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          ethno: {
+            bgDark: '#0A0F1D',
+            cardDark: '#131B2E',
+            accent: '#00D1B2',
+            gold: '#DFB15B',
+          }
+        }
+      }
+    }
+  }
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .tab-btn.active { background: #00D1B2; color: #0A0F1D; }
+  .drop-zone { border: 2px dashed #334155; transition: all 0.2s; }
+  .drop-zone.drag-over { border-color: #00D1B2; background: rgba(0,209,178,0.05); }
+  input[type=text], input[type=email], input[type=url], textarea, input[type=password] {
+    background: #0A0F1D; border: 1px solid #1e293b; color: #e2e8f0;
+    border-radius: 10px; padding: 10px 14px; width: 100%; outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type=text]:focus, input[type=email]:focus, input[type=url]:focus, textarea:focus, input[type=password]:focus {
+    border-color: #00D1B2;
+  }
+  textarea { resize: vertical; min-height: 80px; }
+  .preview-img { width:100%; height:160px; object-fit:cover; border-radius:12px; }
+  .save-btn {
+    background: #00D1B2; color: #0A0F1D; font-weight: 700;
+    padding: 12px 28px; border-radius: 12px; border: none; cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .save-btn:hover { opacity: 0.85; }
+  .delete-btn {
+    background: #7f1d1d; color: #fca5a5; font-weight: 600;
+    padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer;
+    font-size: 13px;
+  }
+  .add-btn {
+    background: rgba(0,209,178,0.1); color: #00D1B2; font-weight: 700;
+    padding: 10px 20px; border-radius: 10px; border: 1px solid rgba(0,209,178,0.3);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .add-btn:hover { background: rgba(0,209,178,0.2); }
+  label { font-size: 13px; font-weight: 600; color: #94a3b8; display: block; margin-bottom: 5px; }
+  .card { background: #131B2E; border: 1px solid #1e293b; border-radius: 16px; padding: 20px; }
+  .section-title { font-size: 18px; font-weight: 700; color: #f1f5f9; margin-bottom: 16px; }
+  .toast { position: fixed; bottom: 24px; right: 24px; background: #10b981; color: white;
+    padding: 14px 22px; border-radius: 14px; font-weight: 700; z-index: 9999;
+    transform: translateY(60px); opacity: 0; transition: all 0.35s; pointer-events: none; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .nav-badge { font-size: 11px; background: rgba(0,209,178,0.15); color: #00D1B2;
+    padding: 2px 8px; border-radius: 20px; }
+</style>
+</head>
+<body class="bg-ethno-bgDark text-slate-100 min-h-screen">
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-ethno-bgDark">
+  <div class="card w-full max-w-sm space-y-6 text-center">
+    <div>
+      <span class="text-3xl font-extrabold text-white">ZIYO<span style="color:#00D1B2">.</span></span>
+      <p class="text-slate-400 text-sm mt-1">Admin Panel</p>
+    </div>
+    <div class="text-left space-y-3">
+      <div>
+        <label>Foydalanuvchi nomi</label>
+        <input id="loginUser" type="text" placeholder="admin">
+      </div>
+      <div>
+        <label>Parol</label>
+        <input id="loginPass" type="password" placeholder="••••••">
+      </div>
+      <p id="loginErr" class="text-red-400 text-xs hidden">Noto'g'ri ma'lumotlar!</p>
+    </div>
+    <button onclick="doLogin()" class="save-btn w-full">Kirish</button>
+    <p class="text-xs text-slate-600">Default: admin / ziyo2026</p>
+  </div>
+</div>
+
+<!-- MAIN ADMIN -->
+<div id="adminPanel" class="hidden">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 border-b border-slate-800 bg-ethno-bgDark/90 backdrop-blur-md px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <span class="text-xl font-extrabold text-white">ZIYO<span style="color:#00D1B2">.</span></span>
+      <span class="text-xs text-slate-500 hidden md:block">Portfolio Admin Panel</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <button onclick="exportData()" class="text-sm text-slate-400 hover:text-ethno-accent transition-colors flex items-center gap-1.5">
+        <i class="fa-solid fa-download"></i> Eksport
+      </button>
+      <button onclick="importTrigger()" class="text-sm text-slate-400 hover:text-ethno-accent transition-colors flex items-center gap-1.5">
+        <i class="fa-solid fa-upload"></i> Import
+      </button>
+      <input id="importFile" type="file" accept=".json" class="hidden" onchange="importData(event)">
+      <button onclick="doLogout()" class="text-sm text-red-400 hover:text-red-300 transition-colors">
+        <i class="fa-solid fa-right-from-bracket"></i> Chiqish
+      </button>
+    </div>
+  </header>
+
+  <!-- Tab Nav -->
+  <div class="px-6 pt-5 pb-0 flex flex-wrap gap-2 border-b border-slate-800">
+    <button class="tab-btn active px-5 py-2.5 rounded-t-xl text-sm font-semibold transition-all bg-ethno-cardDark" onclick="switchTab('hero')">
+      <i class="fa-solid fa-house mr-1.5"></i> Asosiy
+    </button>
+    <button class="tab-btn px-5 py-2.5 rounded-t-xl text-sm font-semibold transition-all bg-ethno-cardDark text-slate-400 hover:text-white" onclick="switchTab('about')">
+      <i class="fa-solid fa-user mr-1.5"></i> Men haqimda
+    </button>
+    <button class="tab-btn px-5 py-2.5 rounded-t-xl text-sm font-semibold transition-all bg-ethno-cardDark text-slate-400 hover:text-white" onclick="switchTab('projects')">
+      <i class="fa-solid fa-briefcase mr-1.5"></i> Loyihalar
+      <span id="projCount" class="nav-badge ml-1">0</span>
+    </button>
+    <button class="tab-btn px-5 py-2.5 rounded-t-xl text-sm font-semibold transition-all bg-ethno-cardDark text-slate-400 hover:text-white" onclick="switchTab('skills')">
+      <i class="fa-solid fa-chart-bar mr-1.5"></i> Ko'nikmalar
+    </button>
+    <button class="tab-btn px-5 py-2.5 rounded-t-xl text-sm font-semibold transition-all bg-ethno-cardDark text-slate-400 hover:text-white" onclick="switchTab('experience')">
+      <i class="fa-solid fa-timeline mr-1.5"></i> Tajriba
+    </button>
+    <button class="tab-btn px-5 py-2.5 rounded-t-xl text-sm font-semibold transition-all bg-ethno-cardDark text-slate-400 hover:text-white" onclick="switchTab('contact')">
+      <i class="fa-solid fa-envelope mr-1.5"></i> Aloqa
+    </button>
+    <button class="tab-btn px-5 py-2.5 rounded-t-xl text-sm font-semibold transition-all bg-ethno-cardDark text-slate-400 hover:text-white" onclick="switchTab('settings')">
+      <i class="fa-solid fa-gear mr-1.5"></i> Sozlamalar
+    </button>
+  </div>
+
+  <div class="px-6 py-8 max-w-5xl mx-auto space-y-8">
+
+    <!-- ===== TAB: HERO ===== -->
+    <div id="tab-hero" class="tab-content space-y-6">
+      <div class="card space-y-5">
+        <p class="section-title"><i class="fa-solid fa-image mr-2 text-ethno-accent"></i>Profil rasmi</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label>Rasm yuklash</label>
+            <div id="profileDropZone" class="drop-zone rounded-xl p-6 text-center cursor-pointer" onclick="document.getElementById('profileUpload').click()">
+              <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-500 mb-2"></i>
+              <p class="text-sm text-slate-500">Rasm tanlang yoki bu yerga sudrab tashlang</p>
+              <p class="text-xs text-slate-600 mt-1">JPG, PNG, WEBP (maks 5MB)</p>
+              <input id="profileUpload" type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event,'profileImg','profilePreview')">
+            </div>
+          </div>
+          <div>
+            <label>Ko'rinish</label>
+            <img id="profilePreview" src="" alt="Preview" class="preview-img hidden">
+            <div id="profilePlaceholder" class="h-40 rounded-xl bg-slate-800 flex items-center justify-center text-slate-600">
+              <i class="fa-solid fa-user text-4xl"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card space-y-5">
+        <p class="section-title"><i class="fa-solid fa-pen mr-2 text-ethno-gold"></i>Asosiy matnlar</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div>
+            <label>Ism (sarlavha)</label>
+            <input type="text" id="heroName" placeholder="Sardor">
+          </div>
+          <div>
+            <label>Kasb/Unvon (yoziluvchi matn)</label>
+            <input type="text" id="heroTitles" placeholder="Frontend Dasturchi, UI/UX Dizayner (vergul bilan)">
+          </div>
+        </div>
+        <div>
+          <label>Qisqa tavsif (bio)</label>
+          <textarea id="heroBio" placeholder="O'zingiz haqingizda qisqacha..."></textarea>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div>
+            <label>Tugma 1 matni</label>
+            <input type="text" id="heroBtn1" placeholder="Loyihalarim">
+          </div>
+          <div>
+            <label>Tugma 2 matni</label>
+            <input type="text" id="heroBtn2" placeholder="Men bilan bog'lanish">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+          <div>
+            <label>Stat 1 raqam</label>
+            <input type="text" id="stat1num" placeholder="10+">
+            <label class="mt-2">Stat 1 matn</label>
+            <input type="text" id="stat1txt" placeholder="Muvaffaqiyatli Loyiha">
+          </div>
+          <div>
+            <label>Stat 2 raqam</label>
+            <input type="text" id="stat2num" placeholder="3+">
+            <label class="mt-2">Stat 2 matn</label>
+            <input type="text" id="stat2txt" placeholder="Yillik Tajriba">
+          </div>
+          <div>
+            <label>Stat 3 raqam</label>
+            <input type="text" id="stat3num" placeholder="99%">
+            <label class="mt-2">Stat 3 matn</label>
+            <input type="text" id="stat3txt" placeholder="Mijozlar mamnunligi">
+          </div>
+          <div>
+            <label>Stat 4 raqam</label>
+            <input type="text" id="stat4num" placeholder="24/7">
+            <label class="mt-2">Stat 4 matn</label>
+            <input type="text" id="stat4txt" placeholder="Tizim Monitoringi">
+          </div>
+        </div>
+        <button class="save-btn" onclick="saveSection('hero')">
+          <i class="fa-solid fa-floppy-disk mr-2"></i>Saqlash
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== TAB: ABOUT ===== -->
+    <div id="tab-about" class="tab-content hidden space-y-6">
+      <div class="card space-y-5">
+        <p class="section-title"><i class="fa-solid fa-user-circle mr-2 text-ethno-accent"></i>Men haqimda bo'limi</p>
+        <div>
+          <label>Sarlavha</label>
+          <input type="text" id="aboutTitle" placeholder="Men haqimda & Falsafam">
+        </div>
+        <div>
+          <label>1-paragraf</label>
+          <textarea id="aboutP1" placeholder="O'zingiz haqingizda..."></textarea>
+        </div>
+        <div>
+          <label>2-paragraf</label>
+          <textarea id="aboutP2" placeholder="Ishlash tarzingiz haqida..."></textarea>
+        </div>
+        <div>
+          <label>CV havolasi (URL yoki "#")</label>
+          <input type="url" id="cvLink" placeholder="https://drive.google.com/...">
+        </div>
+        <button class="save-btn" onclick="saveSection('about')">
+          <i class="fa-solid fa-floppy-disk mr-2"></i>Saqlash
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== TAB: PROJECTS ===== -->
+    <div id="tab-projects" class="tab-content hidden space-y-6">
+      <div class="flex justify-between items-center">
+        <p class="section-title mb-0"><i class="fa-solid fa-briefcase mr-2 text-ethno-gold"></i>Loyihalar</p>
+        <button class="add-btn" onclick="addProject()">
+          <i class="fa-solid fa-plus mr-1.5"></i>Yangi loyiha
+        </button>
+      </div>
+      <div id="projectsList" class="space-y-4"></div>
+    </div>
+
+    <!-- ===== TAB: SKILLS ===== -->
+    <div id="tab-skills" class="tab-content hidden space-y-6">
+      <div class="flex justify-between items-center">
+        <p class="section-title mb-0"><i class="fa-solid fa-chart-bar mr-2 text-ethno-accent"></i>Ko'nikmalar</p>
+        <button class="add-btn" onclick="addSkill()">
+          <i class="fa-solid fa-plus mr-1.5"></i>Ko'nikma qo'shish
+        </button>
+      </div>
+      <div id="skillsList" class="space-y-3"></div>
+      <button class="save-btn" onclick="saveSection('skills')">
+        <i class="fa-solid fa-floppy-disk mr-2"></i>Saqlash
+      </button>
+    </div>
+
+    <!-- ===== TAB: EXPERIENCE ===== -->
+    <div id="tab-experience" class="tab-content hidden space-y-6">
+      <div class="flex justify-between items-center">
+        <p class="section-title mb-0"><i class="fa-solid fa-timeline mr-2 text-ethno-gold"></i>Tajriba / Ta'lim</p>
+        <button class="add-btn" onclick="addExperience()">
+          <i class="fa-solid fa-plus mr-1.5"></i>Qo'shish
+        </button>
+      </div>
+      <div id="experienceList" class="space-y-4"></div>
+    </div>
+
+    <!-- ===== TAB: CONTACT ===== -->
+    <div id="tab-contact" class="tab-content hidden space-y-6">
+      <div class="card space-y-5">
+        <p class="section-title"><i class="fa-solid fa-envelope mr-2 text-ethno-accent"></i>Aloqa ma'lumotlari</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div>
+            <label>Email manzil</label>
+            <input type="email" id="contactEmail" placeholder="developerziyo@gmail.com">
+          </div>
+          <div>
+            <label>Telegram username</label>
+            <input type="text" id="contactTelegram" placeholder="@ziyo_boy">
+          </div>
+          <div>
+            <label>GitHub havola</label>
+            <input type="url" id="contactGithub" placeholder="https://github.com/...">
+          </div>
+          <div>
+            <label>LinkedIn havola</label>
+            <input type="url" id="contactLinkedin" placeholder="https://linkedin.com/in/...">
+          </div>
+        </div>
+        <div>
+          <label>Joylashuv / Shahar</label>
+          <input type="text" id="contactLocation" placeholder="Toshkent, O'zbekiston">
+        </div>
+        <button class="save-btn" onclick="saveSection('contact')">
+          <i class="fa-solid fa-floppy-disk mr-2"></i>Saqlash
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== TAB: SETTINGS ===== -->
+    <div id="tab-settings" class="tab-content hidden space-y-6">
+      <div class="card space-y-5">
+        <p class="section-title"><i class="fa-solid fa-lock mr-2 text-ethno-accent"></i>Xavfsizlik</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div>
+            <label>Yangi foydalanuvchi nomi</label>
+            <input type="text" id="newUser" placeholder="admin">
+          </div>
+          <div>
+            <label>Yangi parol</label>
+            <input type="password" id="newPass" placeholder="yangi parol">
+          </div>
+        </div>
+        <button class="save-btn" onclick="changePassword()">
+          <i class="fa-solid fa-key mr-2"></i>Parolni yangilash
+        </button>
+      </div>
+      <div class="card space-y-5">
+        <p class="section-title"><i class="fa-solid fa-database mr-2 text-ethno-gold"></i>Ma'lumotlar</p>
+        <div class="flex flex-wrap gap-3">
+          <button class="add-btn" onclick="exportData()">
+            <i class="fa-solid fa-download mr-1.5"></i>JSON eksport qilish
+          </button>
+          <button class="add-btn" onclick="importTrigger()">
+            <i class="fa-solid fa-upload mr-1.5"></i>JSON import qilish
+          </button>
+          <button onclick="clearAllData()" style="background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);" class="px-5 py-2.5 rounded-xl font-semibold text-sm cursor-pointer hover:bg-red-900/20">
+            <i class="fa-solid fa-trash mr-1.5"></i>Hammasini o'chirish
+          </button>
+        </div>
+        <p class="text-xs text-slate-600">Barcha ma'lumotlar browseringizning localStorage xotirasida saqlanadi.</p>
+      </div>
+      <div class="card">
+        <p class="section-title"><i class="fa-solid fa-code mr-2 text-ethno-accent"></i>Portfolio saytiga ulash</p>
+        <p class="text-sm text-slate-400 mb-4">
+          Admin panelda saqlagan ma'lumotlaringizni portfolio saytingizga qo'llash uchun quyidagi koddan foydalaning.
+          Bu kodni portfolio saytingizning &lt;script&gt; tegiga qo'shing:
+        </p>
+        <pre class="bg-slate-900 rounded-xl p-4 text-xs text-green-400 overflow-x-auto whitespace-pre-wrap" id="integrationCode"></pre>
+        <button onclick="copyCode()" class="add-btn mt-3 text-sm">
+          <i class="fa-solid fa-copy mr-1.5"></i>Kodni nusxalash
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast flex items-center gap-3">
+  <i class="fa-solid fa-circle-check text-xl"></i>
+  <span id="toastMsg">Saqlandi!</span>
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+const DEFAULT_CREDS = { user: 'admin', pass: 'ziyo2026' };
+
+let state = {
+  hero: {
+    name: 'Sardor', titles: 'Frontend Dasturchi, UI/UX Dizayner',
+    bio: "O'zbekistonning boy madaniy merosidan ilhomlanib, har bir dasturiy mahsulotda tartib, simmetriya va unikal dizayn uyg'unligini aks ettiraman.",
+    bio2: "Barcha ishimda yuqori sifat, foydalanishga qulaylik va xavfsizlik birinchi o'rinda turadi.",
+    btn1: 'Loyihalarim', btn2: "Men bilan bog'lanish",
+    stat1num:'10+', stat1txt:'Muvaffaqiyatli Loyiha',
+    stat2num:'3+',  stat2txt:'Yillik Tajriba',
+    stat3num:'99%', stat3txt:'Mijozlar mamnunligi',
+    stat4num:'24/7',stat4txt:'Tizim Monitoringi',
+    profileImg: ''
+  },
+  about: {
+    title: "Men haqimda & Falsafam",
+    p1: "O'zbekistonning boy madaniy merosidan ilhomlanib, har bir dasturiy mahsulotda tartib, simmetriya va unikal dizayn uyg'unligini aks ettiraman.",
+    p2: "Barcha ishimda yuqori sifat, foydalanishga qulaylik va xavfsizlik birinchi o'rinda turadi. Loyihalaringizni g'oyadan mukammal natijagacha olib boraman.",
+    cvLink: '#'
+  },
+  projects: [
+    { id: 1, title:'Focus Guard', category:'web', badge:'Veb ilova', desc:'Talaba va muhandislar uchun diqqat va unumdorlikni boshqaruvchi dars va ish taqvimi platformasi.', techs:'Tailwind, Vue.js', demoLink:'#', image:'' },
+    { id: 2, title:'Hotel Admin System', category:'desktop', badge:'Desktop', desc:'Mehmonxona xonalarini bron qilish, to\'lovlar hamda xodimlar hisobotini yurituvchi desktop ilova.', techs:'C++, SQL', demoLink:'#', image:'' },
+    { id: 3, title:'Ethno-Uz UI Kit', category:'design', badge:'UI/UX dizayn', desc:"Modern veb-ilovalar uchun an'anaviy o'zbek me'morchiligi asosida ishlangan interaktiv komponentlar kutubxonasi.", techs:'Figma, Creative Design', demoLink:'#', image:'' }
+  ],
+  skills: [
+    { name:'Frontend (HTML, CSS, Tailwind, JS/React)', pct:90 },
+    { name:'Backend (Node.js, Express, C++)', pct:85 },
+    { name:"Ma'lumotlar bazasi (PostgreSQL, MongoDB, SQL)", pct:80 },
+    { name:'Tizim arxitekturasi va UI/UX Dizayn', pct:75 }
+  ],
+  experience: [
+    { period:'2024 - Hozir', company:'Kompaniya nomi', role:'Senior Frontend Dasturchi', desc:"Veb-ilovalarning yuklanish tezligini 40% ga optimizatsiya qilish.", type:'work' },
+    { period:'2022 - 2024', company:'IT Markaz va Startaplar', role:'Full-Stack Muhandis', desc:'Yirik logistika va mehmonxona tizimlari uchun back-end ma\'lumotlar bazasini xavfsiz arxitekturada loyihalash.', type:'work' },
+    { period:'2018 - 2022', company:"Universitet ta'limi", role:'TATU - Amaliy Informatika', desc:"Algoritmlar, ma'lumotlar tuzilmalari hamda kompyuter tarmoqlari bo'yicha fundamental bilimlarni mukammal darajada o'zlashtirish.", type:'edu' }
+  ],
+  contact: {
+    email:'developerziyo@gmail.com', telegram:'@ziyo_boy',
+    github:'#', linkedin:'#', location:"Toshkent, O'zbekiston"
+  }
+};
+
+let nextId = 100;
+
+// ============================================================
+// LOAD / SAVE
+// ============================================================
+function loadState() {
+  const saved = localStorage.getItem('ziyo_admin_state');
+  if (saved) { try { state = JSON.parse(saved); } catch(e){} }
+  // ensure arrays exist
+  if (!Array.isArray(state.projects)) state.projects = [];
+  if (!Array.isArray(state.skills)) state.skills = [];
+  if (!Array.isArray(state.experience)) state.experience = [];
+}
+
+function persistState() {
+  localStorage.setItem('ziyo_admin_state', JSON.stringify(state));
+  updateProjCount();
+}
+
+// ============================================================
+// AUTH
+// ============================================================
+function doLogin() {
+  const creds = JSON.parse(localStorage.getItem('ziyo_creds') || JSON.stringify(DEFAULT_CREDS));
+  const u = document.getElementById('loginUser').value;
+  const p = document.getElementById('loginPass').value;
+  if (u === creds.user && p === creds.pass) {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('adminPanel').classList.remove('hidden');
+    loadState(); populateAll();
+  } else {
+    document.getElementById('loginErr').classList.remove('hidden');
+  }
+}
+
+document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function doLogout() {
+  document.getElementById('adminPanel').classList.add('hidden');
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+}
+
+function changePassword() {
+  const u = document.getElementById('newUser').value.trim();
+  const p = document.getElementById('newPass').value.trim();
+  if (!u || !p) { showToast('Iltimos, ikkisini ham to\'ldiring!', 'error'); return; }
+  localStorage.setItem('ziyo_creds', JSON.stringify({ user: u, pass: p }));
+  showToast('Parol yangilandi!');
+  document.getElementById('newUser').value = '';
+  document.getElementById('newPass').value = '';
+}
+
+// ============================================================
+// TABS
+// ============================================================
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active');
+    b.classList.add('text-slate-400');
+    b.classList.remove('text-white');
+  });
+  document.getElementById('tab-' + name).classList.remove('hidden');
+  event.currentTarget.classList.add('active');
+  event.currentTarget.classList.remove('text-slate-400');
+}
+
+// ============================================================
+// POPULATE FIELDS
+// ============================================================
+function populateAll() {
+  // Hero
+  const h = state.hero;
+  setV('heroName', h.name); setV('heroTitles', h.titles); setV('heroBio', h.bio);
+  setV('heroBtn1', h.btn1); setV('heroBtn2', h.btn2);
+  setV('stat1num', h.stat1num); setV('stat1txt', h.stat1txt);
+  setV('stat2num', h.stat2num); setV('stat2txt', h.stat2txt);
+  setV('stat3num', h.stat3num); setV('stat3txt', h.stat3txt);
+  setV('stat4num', h.stat4num); setV('stat4txt', h.stat4txt);
+  if (h.profileImg) showImagePreview(h.profileImg, 'profilePreview', 'profilePlaceholder');
+
+  // About
+  const a = state.about;
+  setV('aboutTitle', a.title); setV('aboutP1', a.p1); setV('aboutP2', a.p2); setV('cvLink', a.cvLink);
+
+  // Contact
+  const c = state.contact;
+  setV('contactEmail', c.email); setV('contactTelegram', c.telegram);
+  setV('contactGithub', c.github); setV('contactLinkedin', c.linkedin); setV('contactLocation', c.location);
+
+  renderProjects(); renderSkills(); renderExperience(); updateProjCount(); renderIntegrationCode();
+}
+
+function setV(id, val) { const el = document.getElementById(id); if (el) el.value = val || ''; }
+
+// ============================================================
+// SAVE SECTIONS
+// ============================================================
+function saveSection(section) {
+  if (section === 'hero') {
+    state.hero.name = gV('heroName'); state.hero.titles = gV('heroTitles'); state.hero.bio = gV('heroBio');
+    state.hero.btn1 = gV('heroBtn1'); state.hero.btn2 = gV('heroBtn2');
+    state.hero.stat1num = gV('stat1num'); state.hero.stat1txt = gV('stat1txt');
+    state.hero.stat2num = gV('stat2num'); state.hero.stat2txt = gV('stat2txt');
+    state.hero.stat3num = gV('stat3num'); state.hero.stat3txt = gV('stat3txt');
+    state.hero.stat4num = gV('stat4num'); state.hero.stat4txt = gV('stat4txt');
+  }
+  if (section === 'about') {
+    state.about.title = gV('aboutTitle'); state.about.p1 = gV('aboutP1');
+    state.about.p2 = gV('aboutP2'); state.about.cvLink = gV('cvLink');
+  }
+  if (section === 'skills') {
+    state.skills = [];
+    document.querySelectorAll('.skill-row').forEach(row => {
+      state.skills.push({ name: row.querySelector('.s-name').value, pct: parseInt(row.querySelector('.s-pct').value) || 80 });
+    });
+  }
+  if (section === 'contact') {
+    state.contact.email = gV('contactEmail'); state.contact.telegram = gV('contactTelegram');
+    state.contact.github = gV('contactGithub'); state.contact.linkedin = gV('contactLinkedin');
+    state.contact.location = gV('contactLocation');
+  }
+  persistState(); renderIntegrationCode(); showToast('✅ Muvaffaqiyatli saqlandi!');
+}
+
+function gV(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+
+// ============================================================
+// IMAGE UPLOAD
+// ============================================================
+function handleImageUpload(event, stateKey, previewId) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('Fayl 5MB dan katta!', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const base64 = e.target.result;
+    if (stateKey === 'profileImg') {
+      state.hero.profileImg = base64;
+      showImagePreview(base64, previewId, 'profilePlaceholder');
+      persistState();
+      showToast('Rasm yuklandi!');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function showImagePreview(src, previewId, placeholderId) {
+  const preview = document.getElementById(previewId);
+  const placeholder = document.getElementById(placeholderId);
+  if (preview) { preview.src = src; preview.classList.remove('hidden'); }
+  if (placeholder) placeholder.classList.add('hidden');
+}
+
+// Project image upload
+function handleProjectImage(event, projectId) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('Fayl 5MB dan katta!', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const proj = state.projects.find(p => p.id == projectId);
+    if (proj) {
+      proj.image = e.target.result;
+      const previewEl = document.getElementById('proj-preview-' + projectId);
+      const placeholderEl = document.getElementById('proj-placeholder-' + projectId);
+      if (previewEl) { previewEl.src = e.target.result; previewEl.classList.remove('hidden'); }
+      if (placeholderEl) placeholderEl.classList.add('hidden');
+      persistState();
+      showToast('Rasm yuklandi!');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+// Drop zone drag-over
+document.getElementById('profileDropZone').addEventListener('dragover', e => {
+  e.preventDefault();
+  document.getElementById('profileDropZone').classList.add('drag-over');
+});
+document.getElementById('profileDropZone').addEventListener('dragleave', () => {
+  document.getElementById('profileDropZone').classList.remove('drag-over');
+});
+document.getElementById('profileDropZone').addEventListener('drop', e => {
+  e.preventDefault();
+  document.getElementById('profileDropZone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    const fakeEvent = { target: { files: [file] } };
+    handleImageUpload(fakeEvent, 'profileImg', 'profilePreview');
+  }
+});
+
+// ============================================================
+// PROJECTS
+// ============================================================
+function renderProjects() {
+  const container = document.getElementById('projectsList');
+  container.innerHTML = '';
+  state.projects.forEach(proj => {
+    const div = document.createElement('div');
+    div.className = 'card space-y-4';
+    div.innerHTML = `
+      <div class="flex justify-between items-center">
+        <span style="color:#00D1B2;font-weight:700;font-size:15px">${proj.title || 'Yangi loyiha'}</span>
+        <button class="delete-btn" onclick="deleteProject(${proj.id})"><i class="fa-solid fa-trash mr-1"></i>O'chirish</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label>Loyiha nomi</label>
+          <input type="text" class="proj-title" data-id="${proj.id}" value="${esc(proj.title)}" oninput="updateProject(${proj.id},'title',this.value)">
+        </div>
+        <div>
+          <label>Kategoriya</label>
+          <select class="proj-cat" data-id="${proj.id}" onchange="updateProject(${proj.id},'category',this.value)"
+            style="background:#0A0F1D;border:1px solid #1e293b;color:#e2e8f0;border-radius:10px;padding:10px 14px;width:100%;outline:none;">
+            <option value="web" ${proj.category==='web'?'selected':''}>Veb ilova</option>
+            <option value="desktop" ${proj.category==='desktop'?'selected':''}>Desktop</option>
+            <option value="design" ${proj.category==='design'?'selected':''}>UI/UX Dizayn</option>
+          </select>
+        </div>
+        <div>
+          <label>Badge matni</label>
+          <input type="text" value="${esc(proj.badge)}" oninput="updateProject(${proj.id},'badge',this.value)">
+        </div>
+        <div>
+          <label>Demo havolasi</label>
+          <input type="url" value="${esc(proj.demoLink)}" placeholder="https://..." oninput="updateProject(${proj.id},'demoLink',this.value)">
+        </div>
+      </div>
+      <div>
+        <label>Qisqa tavsif</label>
+        <textarea oninput="updateProject(${proj.id},'desc',this.value)">${esc(proj.desc)}</textarea>
+      </div>
+      <div>
+        <label>Texnologiyalar (vergul bilan)</label>
+        <input type="text" value="${esc(proj.techs)}" placeholder="React, Node.js, MongoDB" oninput="updateProject(${proj.id},'techs',this.value)">
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label>Loyiha rasmi</label>
+          <div class="drop-zone rounded-xl p-4 text-center cursor-pointer" onclick="document.getElementById('proj-upload-${proj.id}').click()">
+            <i class="fa-solid fa-image text-2xl text-slate-500 mb-1"></i>
+            <p class="text-xs text-slate-500">Rasm yuklash</p>
+            <input id="proj-upload-${proj.id}" type="file" accept="image/*" class="hidden" onchange="handleProjectImage(event,${proj.id})">
+          </div>
+        </div>
+        <div>
+          <label>Ko'rinish</label>
+          ${proj.image
+            ? `<img id="proj-preview-${proj.id}" src="${proj.image}" class="preview-img">
+               <div id="proj-placeholder-${proj.id}" class="hidden"></div>`
+            : `<img id="proj-preview-${proj.id}" src="" class="preview-img hidden">
+               <div id="proj-placeholder-${proj.id}" class="h-40 rounded-xl bg-slate-800 flex items-center justify-center text-slate-600"><i class="fa-solid fa-image text-3xl"></i></div>`
+          }
+        </div>
+      </div>
+      <button class="save-btn" onclick="saveProjects()"><i class="fa-solid fa-floppy-disk mr-2"></i>Saqlash</button>
+    `;
+    container.appendChild(div);
+  });
+  updateProjCount();
+}
+
+function updateProject(id, field, value) {
+  const proj = state.projects.find(p => p.id == id);
+  if (proj) { proj[field] = value; }
+}
+
+function addProject() {
+  state.projects.push({ id: nextId++, title:'Yangi loyiha', category:'web', badge:'Veb ilova', desc:'', techs:'', demoLink:'#', image:'' });
+  persistState(); renderProjects();
+}
+
+function deleteProject(id) {
+  if (!confirm("Loyihani o'chirasizmi?")) return;
+  state.projects = state.projects.filter(p => p.id != id);
+  persistState(); renderProjects();
+}
+
+function saveProjects() {
+  // collect latest values from DOM
+  document.querySelectorAll('[class*="proj-title"]').forEach(el => {
+    const id = el.dataset.id;
+    const proj = state.projects.find(p => p.id == id);
+    if (proj) proj.title = el.value;
+  });
+  persistState(); renderIntegrationCode();
+  showToast('Loyihalar saqlandi!');
+}
+
+// ============================================================
+// SKILLS
+// ============================================================
+function renderSkills() {
+  const container = document.getElementById('skillsList');
+  container.innerHTML = '';
+  state.skills.forEach((sk, i) => {
+    const div = document.createElement('div');
+    div.className = 'card skill-row flex items-center gap-4 flex-wrap';
+    div.innerHTML = `
+      <div style="flex:1;min-width:200px">
+        <label>Ko'nikma nomi</label>
+        <input type="text" class="s-name" value="${esc(sk.name)}" placeholder="Masalan: React.js">
+      </div>
+      <div style="width:120px">
+        <label>Foiz (0-100)</label>
+        <input type="text" class="s-pct" value="${sk.pct}" placeholder="90">
+      </div>
+      <button onclick="deleteSkill(${i})" style="margin-top:18px" class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function addSkill() {
+  state.skills.push({ name:"Yangi ko'nikma", pct: 80 });
+  renderSkills();
+}
+
+function deleteSkill(idx) {
+  state.skills.splice(idx, 1);
+  renderSkills();
+}
+
+// ============================================================
+// EXPERIENCE
+// ============================================================
+function renderExperience() {
+  const container = document.getElementById('experienceList');
+  container.innerHTML = '';
+  state.experience.forEach((ex, i) => {
+    const div = document.createElement('div');
+    div.className = 'card space-y-4';
+    div.innerHTML = `
+      <div class="flex justify-between items-center">
+        <span style="color:#DFB15B;font-weight:700;font-size:14px">${ex.period || '---'} — ${ex.role || ''}</span>
+        <button class="delete-btn" onclick="deleteExp(${i})"><i class="fa-solid fa-trash mr-1"></i>O'chirish</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label>Davr</label>
+          <input type="text" value="${esc(ex.period)}" placeholder="2022 - 2024" oninput="updateExp(${i},'period',this.value)">
+        </div>
+        <div>
+          <label>Turi</label>
+          <select onchange="updateExp(${i},'type',this.value)"
+            style="background:#0A0F1D;border:1px solid #1e293b;color:#e2e8f0;border-radius:10px;padding:10px 14px;width:100%;outline:none;">
+            <option value="work" ${ex.type==='work'?'selected':''}>Ish tajribasi</option>
+            <option value="edu" ${ex.type==='edu'?'selected':''}>Ta'lim</option>
+          </select>
+        </div>
+        <div>
+          <label>Kompaniya / Tashkilot</label>
+          <input type="text" value="${esc(ex.company)}" oninput="updateExp(${i},'company',this.value)">
+        </div>
+        <div>
+          <label>Lavozim / Mutaxassislik</label>
+          <input type="text" value="${esc(ex.role)}" oninput="updateExp(${i},'role',this.value)">
+        </div>
+      </div>
+      <div>
+        <label>Tavsif</label>
+        <textarea oninput="updateExp(${i},'desc',this.value)">${esc(ex.desc)}</textarea>
+      </div>
+      <button class="save-btn" onclick="saveExp()"><i class="fa-solid fa-floppy-disk mr-2"></i>Saqlash</button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function updateExp(i, field, value) { state.experience[i][field] = value; }
+function addExperience() {
+  state.experience.unshift({ period:'2024 - Hozir', company:'', role:'', desc:'', type:'work' });
+  renderExperience();
+}
+function deleteExp(i) {
+  if (!confirm("O'chirasizmi?")) return;
+  state.experience.splice(i, 1);
+  persistState(); renderExperience();
+}
+function saveExp() { persistState(); renderIntegrationCode(); showToast('Tajriba saqlandi!'); }
+
+// ============================================================
+// EXPORT / IMPORT
+// ============================================================
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ziyo-portfolio-data.json';
+  a.click();
+}
+function importTrigger() { document.getElementById('importFile').click(); }
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      state = JSON.parse(e.target.result);
+      persistState(); populateAll();
+      showToast('Ma\'lumotlar import qilindi!');
+    } catch {
+      showToast('Noto\'g\'ri JSON fayl!', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+function clearAllData() {
+  if (!confirm("Barcha ma'lumotlarni o'chirmoqchimisiz?")) return;
+  localStorage.removeItem('ziyo_admin_state');
+  location.reload();
+}
+
+// ============================================================
+// INTEGRATION CODE
+// ============================================================
+function renderIntegrationCode() {
+  const code = `// ── Portfolio saytiga ma'lumotlarni yuklash ──
+// Bu kodni portfolio saytingizning <script> tegiga qo'shing
+
+function loadPortfolioData() {
+  const raw = localStorage.getItem('ziyo_admin_state');
+  if (!raw) return;
+  const data = JSON.parse(raw);
+
+  // Ism
+  const nameEl = document.querySelector('.ethno-title');
+  if (nameEl) nameEl.textContent = data.hero.name;
+
+  // Bio
+  const bioEls = document.querySelectorAll('#about p');
+  if (bioEls[0]) bioEl[0].textContent = data.about.p1;
+
+  // Email & Telegram
+  const emailLink = document.querySelector('[href^="mailto:"]');
+  if (emailLink) emailLink.href = 'mailto:' + data.contact.email;
+
+  // Statlar
+  const statNums = document.querySelectorAll('.font-mono');
+  if (statNums[0]) statNums[0].textContent = data.hero.stat1num;
+  if (statNums[1]) statNums[1].textContent = data.hero.stat2num;
+  if (statNums[2]) statNums[2].textContent = data.hero.stat3num;
+  if (statNums[3]) statNums[3].textContent = data.hero.stat4num;
+}
+
+// Sahifa yuklanganda avtomatik ishga tushish
+document.addEventListener('DOMContentLoaded', loadPortfolioData);`;
+  const el = document.getElementById('integrationCode');
+  if (el) el.textContent = code;
+}
+
+function copyCode() {
+  const code = document.getElementById('integrationCode').textContent;
+  navigator.clipboard.writeText(code).then(() => showToast('Kod nusxalandi!'));
+}
+
+// ============================================================
+// UI HELPERS
+// ============================================================
+function updateProjCount() {
+  const el = document.getElementById('projCount');
+  if (el) el.textContent = state.projects.length;
+}
+
+function showToast(msg, type = 'success') {
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  toast.style.background = type === 'error' ? '#ef4444' : '#10b981';
+  toastMsg.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+function esc(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Init
+loadState();
+</script>
+</body>
+</html>

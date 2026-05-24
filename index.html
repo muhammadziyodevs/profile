@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZIYO | Premium Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        ethno: {
+                            bgDark: '#0A0F1D',
+                            cardDark: '#131B2E',
+                            accent: '#00D1B2',
+                            gold: '#DFB15B',
+                            lightBg: '#F8FAFC',
+                            lightCard: '#FFFFFF'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .ethno-title { font-family: 'Playfair Display', serif; }
+        .girih-pattern {
+            background-image: radial-gradient(rgba(0,209,178,0.15) 1px, transparent 1px),
+                              radial-gradient(rgba(223,177,91,0.15) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+        }
+        .glass-header { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .skill-bar-fill { transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+    </style>
+</head>
+<body class="bg-ethno-bgDark dark:bg-ethno-bgDark text-slate-100 dark:text-slate-100 transition-colors duration-300">
+
+    <div class="fixed inset-0 z-0 opacity-40 dark:opacity-20 pointer-events-none girih-pattern"></div>
+    <div class="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-ethno-accent/10 blur-[120px] pointer-events-none"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-ethno-gold/10 blur-[120px] pointer-events-none"></div>
+
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 w-full z-50 border-b border-slate-200/10 dark:border-slate-800/50 bg-white/75 dark:bg-ethno-bgDark/75 glass-header transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <span id="siteLogoName" class="text-2xl font-extrabold tracking-wider text-slate-900 dark:text-white">SARDOR<span class="text-ethno-accent">.</span></span>
+                <span class="text-ethno-gold font-bold text-lg">❖</span>
+            </a>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#home" class="text-sm font-medium hover:text-ethno-accent transition-colors">Asosiy</a>
+                <a href="#about" class="text-sm font-medium hover:text-ethno-accent transition-colors">Men haqimda</a>
+                <a href="#portfolio" class="text-sm font-medium hover:text-ethno-accent transition-colors">Portfoliom</a>
+                <a href="#experience" class="text-sm font-medium hover:text-ethno-accent transition-colors">Xronologiya</a>
+                <a href="#contact" class="text-sm font-medium hover:text-ethno-accent transition-colors">Aloqa</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <button id="themeToggle" class="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block text-ethno-gold"></i>
+                </button>
+                <button id="menuToggle" class="md:hidden p-2.5 text-slate-800 dark:text-slate-200">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden absolute top-full left-0 w-full bg-white dark:bg-ethno-bgDark border-b border-slate-200 dark:border-slate-800/80 p-6 flex flex-col space-y-4">
+            <a href="#home" class="mobile-link text-base font-semibold text-slate-800 dark:text-slate-200">Asosiy</a>
+            <a href="#about" class="mobile-link text-base font-semibold text-slate-800 dark:text-slate-200">Men haqimda</a>
+            <a href="#portfolio" class="mobile-link text-base font-semibold text-slate-800 dark:text-slate-200">Portfoliom</a>
+            <a href="#experience" class="mobile-link text-base font-semibold text-slate-800 dark:text-slate-200">Xronologiya</a>
+            <a href="#contact" class="mobile-link text-base font-semibold text-slate-800 dark:text-slate-200">Aloqa</a>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section id="home" class="relative min-h-screen flex items-center pt-24 px-6 z-10">
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-7 space-y-6">
+                <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-ethno-accent/10 border border-ethno-accent/20 text-ethno-accent text-sm font-semibold">
+                    <span>❖ NEO-UZBEK ETHNO PORTFOLIO</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white leading-tight">
+                    Assalomu alaykum,<br>Men <span id="heroNameDisplay" class="ethno-title text-ethno-gold underline decoration-ethno-accent decoration-2">Sardor</span><br>
+                    <span id="typing-text" class="text-ethno-accent border-r-4 border-ethno-accent pr-2 animate-pulse"></span>
+                </h1>
+                <p id="heroBioDisplay" class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
+                    Texnik mukammallik va an'anaviy uyg'unlik birlashgan nuqtada ishlayman. Murakkab tizimlarni sodda, chiroyli va yuqori darajada himoyalangan ko'rinishda kodlayman.
+                </p>
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <a href="#portfolio" id="heroBtn1Display" class="px-8 py-4 rounded-xl bg-ethno-accent hover:bg-opacity-90 text-slate-950 font-bold transition-all shadow-lg shadow-ethno-accent/20 flex items-center space-x-2">
+                        <span>Loyihalarim</span><i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="#contact" id="heroBtn2Display" class="px-8 py-4 rounded-xl bg-transparent border-2 border-slate-300 dark:border-slate-700 hover:border-ethno-gold text-slate-800 dark:text-slate-200 font-bold transition-all flex items-center space-x-2">
+                        <span>Men bilan bog'lanish</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Profil rasmi yoki SVG -->
+            <div class="lg:col-span-5 flex justify-center relative">
+                <div class="absolute inset-0 bg-gradient-to-tr from-ethno-accent/20 to-ethno-gold/20 rounded-full blur-[60px] animate-pulse"></div>
+                <!-- Profil rasmi (admin paneldan) -->
+                <img id="profilePhoto" src="" alt="Profil" class="hidden w-64 h-64 md:w-80 md:h-80 object-cover rounded-full border-4 border-ethno-accent/40 relative z-10 shadow-2xl">
+                <!-- Default SVG (rasm yo'q bo'lsa) -->
+                <svg id="defaultSvg" class="w-full max-w-[400px] relative z-10" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="250" cy="250" r="180" stroke="#00D1B2" stroke-width="2" stroke-dasharray="10 5" class="animate-spin" style="animation-duration:40s"/>
+                    <circle cx="250" cy="250" r="140" stroke="#DFB15B" stroke-width="1"/>
+                    <polygon points="250,50 367,167 450,250 367,333 250,450 133,333 50,250 133,167" stroke="#00D1B2" stroke-width="1.5" stroke-linejoin="round" class="origin-center animate-spin" style="animation-duration:25s"/>
+                    <polygon points="250,90 330,170 410,250 330,330 250,410 170,330 90,250 170,170" stroke="#DFB15B" stroke-width="1" stroke-linejoin="round"/>
+                    <circle cx="250" cy="250" r="40" fill="#131B2E" stroke="#00D1B2" stroke-width="3"/>
+                    <path d="M250,230 L250,270 M230,250 L270,250" stroke="#DFB15B" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="py-12 border-y border-slate-200/10 dark:border-slate-800/50 bg-slate-50/50 dark:bg-ethno-cardDark/30 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="text-center">
+                <span id="stat1num" class="block text-4xl md:text-5xl font-extrabold text-ethno-accent font-mono">10+</span>
+                <span id="stat1txt" class="text-xs md:text-sm font-semibold tracking-wider text-slate-500 uppercase mt-2 block">Muvaffaqiyatli Loyiha</span>
+            </div>
+            <div class="text-center">
+                <span id="stat2num" class="block text-4xl md:text-5xl font-extrabold text-ethno-gold font-mono">3+</span>
+                <span id="stat2txt" class="text-xs md:text-sm font-semibold tracking-wider text-slate-500 uppercase mt-2 block">Yillik Tajriba</span>
+            </div>
+            <div class="text-center">
+                <span id="stat3num" class="block text-4xl md:text-5xl font-extrabold text-ethno-accent font-mono">99%</span>
+                <span id="stat3txt" class="text-xs md:text-sm font-semibold tracking-wider text-slate-500 uppercase mt-2 block">Mijozlar mamnunligi</span>
+            </div>
+            <div class="text-center">
+                <span id="stat4num" class="block text-4xl md:text-5xl font-extrabold text-ethno-gold font-mono">24/7</span>
+                <span id="stat4txt" class="text-xs md:text-sm font-semibold tracking-wider text-slate-500 uppercase mt-2 block">Tizim Monitoringi</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT & SKILLS -->
+    <section id="about" class="py-24 px-6 relative z-10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16">
+            <div class="lg:col-span-5 space-y-6">
+                <h2 id="aboutTitleDisplay" class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Men haqimda & <span class="text-ethno-gold">Falsafam</span></h2>
+                <div class="w-20 h-1 bg-ethno-accent"></div>
+                <p id="aboutP1Display" class="text-slate-600 dark:text-slate-400">
+                    O'zbekistonning boy madaniy merosidan ilhomlanib, har bir dasturiy mahsulotda tartib, simmetriya va unikal dizayn uyg'unligini aks ettiraman.
+                </p>
+                <p id="aboutP2Display" class="text-slate-600 dark:text-slate-400">
+                    Barcha ishimda yuqori sifat, foydalanishga qulaylik va xavfsizlik birinchi o'rinda turadi. Loyihalaringizni g'oyadan mukammal natijagacha olib boraman.
+                </p>
+                <div class="pt-4">
+                    <a id="cvLinkDisplay" href="#" class="inline-flex items-center space-x-2 text-ethno-gold hover:text-ethno-accent font-bold transition-colors">
+                        <span>Rezyumeni yuklab olish (PDF)</span>
+                        <i class="fa-solid fa-download"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7 space-y-6">
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Professional <span class="text-ethno-accent">Ko'nikmalar</span></h3>
+                <div id="skillsDisplay" class="space-y-4">
+                    <!-- Admin paneldan dinamik to'ldiriladi -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section id="portfolio" class="py-24 px-6 bg-slate-50/50 dark:bg-slate-950/20 relative z-10">
+        <div class="max-w-7xl mx-auto space-y-12">
+            <div class="text-center space-y-4">
+                <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white">Mening <span class="text-ethno-accent">Ijodlarim</span></h2>
+                <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Muvaffaqiyatli yakunlangan loyihalar va qiziqarli startap g'oyalar jamlanmasi.</p>
+                <div class="w-24 h-1 bg-ethno-gold mx-auto"></div>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-6">
+                <div class="relative w-full md:max-w-xs">
+                    <input id="projectSearch" type="text" placeholder="Loyiha qidirish..." class="w-full px-4 py-3 pl-10 rounded-xl bg-white dark:bg-ethno-cardDark border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-ethno-accent transition-colors">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
+                </div>
+                <div class="flex flex-wrap gap-2.5" id="filterBtnsRow">
+                    <button class="filter-btn active px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-ethno-accent text-slate-950" data-filter="all">Barchasi</button>
+                    <button class="filter-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white dark:bg-ethno-cardDark text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-ethno-accent" data-filter="web">Veb ilovalar</button>
+                    <button class="filter-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white dark:bg-ethno-cardDark text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-ethno-accent" data-filter="desktop">Desktop</button>
+                    <button class="filter-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white dark:bg-ethno-cardDark text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-ethno-accent" data-filter="design">UI/UX Dizayn</button>
+                </div>
+            </div>
+            <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Admin paneldan dinamik to'ldiriladi -->
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL -->
+    <div id="projectModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden">
+        <div class="bg-white dark:bg-ethno-cardDark border border-slate-200 dark:border-slate-800 rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl relative">
+            <button id="closeModal" class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:scale-110 transition-transform">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div id="modalContent" class="p-8 space-y-6"></div>
+        </div>
+    </div>
+
+    <!-- EXPERIENCE / TIMELINE -->
+    <section id="experience" class="py-24 px-6 relative z-10">
+        <div class="max-w-4xl mx-auto space-y-12">
+            <div class="text-center space-y-4">
+                <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white">Professional <span class="text-ethno-gold">Xronologiya</span></h2>
+                <p class="text-slate-600 dark:text-slate-400">Ish tajribasi va akademik yo'nalishning muhim bosqichlari.</p>
+                <div class="w-20 h-1 bg-ethno-accent mx-auto"></div>
+            </div>
+            <div id="experienceDisplay" class="relative border-l-2 border-slate-200 dark:border-slate-800 ml-4 md:ml-32 py-8 space-y-12">
+                <!-- Admin paneldan dinamik to'ldiriladi -->
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="py-24 px-6 bg-slate-50/50 dark:bg-slate-950/20 relative z-10 overflow-hidden">
+        <div class="max-w-4xl mx-auto space-y-12">
+            <div class="text-center space-y-4">
+                <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white">Mijozlar <span class="text-ethno-accent">Fikrlari</span></h2>
+                <div class="w-16 h-1 bg-ethno-gold mx-auto"></div>
+            </div>
+            <div class="relative">
+                <div id="testimonialContainer" class="bg-white dark:bg-ethno-cardDark border border-slate-200 dark:border-slate-800 rounded-3xl p-8 md:p-12 shadow-xl transition-all duration-300"></div>
+                <div class="flex justify-center space-x-4 mt-8">
+                    <button id="prevTestimonial" class="w-12 h-12 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center hover:bg-ethno-accent hover:border-ethno-accent hover:text-slate-950 transition-all text-slate-700 dark:text-slate-300">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button id="nextTestimonial" class="w-12 h-12 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center hover:bg-ethno-accent hover:border-ethno-accent hover:text-slate-950 transition-all text-slate-700 dark:text-slate-300">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="py-24 px-6 relative z-10">
+        <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+            <div class="lg:col-span-5 space-y-6">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Aloqa & <span class="text-ethno-gold">Maslahat</span></h2>
+                <p class="text-slate-600 dark:text-slate-400">Yangi loyiha muhokamasi yoki fikr almashish uchun har doim ochiqman.</p>
+                <div class="space-y-4 pt-4">
+                    <div class="flex items-center space-x-4 p-4 rounded-xl bg-white dark:bg-ethno-cardDark border border-slate-200 dark:border-slate-800">
+                        <div class="w-12 h-12 rounded-full bg-ethno-accent/10 flex items-center justify-center text-ethno-accent">
+                            <i class="fa-solid fa-envelope text-lg"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xs text-slate-400">Pochta manzili</span>
+                            <a id="emailLinkDisplay" href="mailto:developerziyo@gmail.com" class="text-slate-800 dark:text-slate-200 font-bold hover:text-ethno-accent transition-colors">developerziyo@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4 p-4 rounded-xl bg-white dark:bg-ethno-cardDark border border-slate-200 dark:border-slate-800">
+                        <div class="w-12 h-12 rounded-full bg-ethno-gold/10 flex items-center justify-center text-ethno-gold">
+                            <i class="fa-brands fa-telegram text-lg"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xs text-slate-400">Telegram aloqa</span>
+                            <a id="tgLinkDisplay" href="https://t.me/ziyo_boy" target="_blank" class="text-slate-800 dark:text-slate-200 font-bold hover:text-ethno-gold transition-colors">@ziyo_boy</a>
+                        </div>
+                    </div>
+                    <div id="locationDisplay" class="flex items-center space-x-4 p-4 rounded-xl bg-white dark:bg-ethno-cardDark border border-slate-200 dark:border-slate-800 hidden">
+                        <div class="w-12 h-12 rounded-full bg-ethno-accent/10 flex items-center justify-center text-ethno-accent">
+                            <i class="fa-solid fa-location-dot text-lg"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xs text-slate-400">Joylashuv</span>
+                            <span id="locationText" class="text-slate-800 dark:text-slate-200 font-bold"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Social links -->
+                <div class="flex gap-3 pt-2">
+                    <a id="githubLinkDisplay" href="#" class="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:border-ethno-accent text-slate-500 hover:text-ethno-accent transition-colors"><i class="fa-brands fa-github"></i></a>
+                    <a id="linkedinLinkDisplay" href="#" class="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:border-ethno-accent text-slate-500 hover:text-ethno-accent transition-colors"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7 bg-white dark:bg-ethno-cardDark border border-slate-200 dark:border-slate-800 p-8 rounded-3xl shadow-xl">
+                <form id="contactForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Ismingiz</label>
+                            <input id="formName" type="text" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-ethno-accent transition-colors" placeholder="Ali Valiyev">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Email manzilingiz</label>
+                            <input id="formEmail" type="email" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-ethno-accent transition-colors" placeholder="ali@gmail.com">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Mavzu</label>
+                        <input id="formSubject" type="text" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-ethno-accent transition-colors" placeholder="Hamkorlik taklifi...">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Sizning xabaringiz</label>
+                        <textarea id="formMessage" required rows="5" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-ethno-accent transition-colors resize-none" placeholder="Loyiha tafsilotlarini yozing..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-4 bg-ethno-accent hover:bg-opacity-90 text-slate-950 font-extrabold rounded-xl transition-all shadow-lg shadow-ethno-accent/10">
+                        Xabar yuborish
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 bg-emerald-500 text-white font-bold py-4 px-6 rounded-2xl shadow-2xl flex items-center space-x-3">
+        <i class="fa-solid fa-circle-check text-xl"></i>
+        <span id="toastMsg">Xabar muvaffaqiyatli yuborildi!</span>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-200/10 dark:border-slate-800/50 py-12 px-6 relative z-10 bg-slate-50/50 dark:bg-slate-950/20">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center space-x-2">
+                <span class="text-xl font-extrabold tracking-wider text-slate-900 dark:text-white">ZIYO<span class="text-ethno-accent">.</span></span>
+                <span class="text-ethno-gold">❖</span>
+            </div>
+            <p class="text-sm text-slate-500">&copy; 2026 ZIYO. Barcha huquqlar himoyalangan.</p>
+            <div class="flex space-x-4 items-center">
+                <a id="footerGithub" href="#" class="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:border-ethno-accent text-slate-500 hover:text-ethno-accent transition-colors"><i class="fa-brands fa-github"></i></a>
+                <a id="footerLinkedin" href="#" class="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:border-ethno-accent text-slate-500 hover:text-ethno-accent transition-colors"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a id="footerTelegram" href="#" class="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:border-ethno-gold text-slate-500 hover:text-ethno-gold transition-colors"><i class="fa-brands fa-telegram"></i></a>
+                <!-- Yashirin admin havola -->
+                <a href="admin-panel.html" class="text-slate-800 dark:text-slate-700 hover:text-ethno-accent transition-colors ml-2 text-xs" title="Admin">❖</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // ─── ADMIN PANEL DAN MA'LUMOT YUKLASH ───────────────────────────────────────
+    function loadPortfolioData() {
+        const raw = localStorage.getItem('ziyo_admin_state');
+        if (!raw) { renderDefaultSkills(); renderDefaultProjects(); renderDefaultExperience(); return; }
+        let data;
+        try { data = JSON.parse(raw); } catch(e) { renderDefaultSkills(); renderDefaultProjects(); renderDefaultExperience(); return; }
+
+        const h = data.hero || {};
+        const a = data.about || {};
+        const c = data.contact || {};
+
+        // --- HERO ---
+        if (h.name) {
+            document.getElementById('heroNameDisplay').textContent = h.name;
+            document.getElementById('siteLogoName').innerHTML = h.name.toUpperCase() + '<span class="text-ethno-accent">.</span>';
+        }
+        if (h.bio) document.getElementById('heroBioDisplay').textContent = h.bio;
+        if (h.btn1) document.getElementById('heroBtn1Display').querySelector('span').textContent = h.btn1;
+        if (h.btn2) document.getElementById('heroBtn2Display').querySelector('span').textContent = h.btn2;
+
+        // Typing phrases
+        if (h.titles) {
+            typingPhrases = h.titles.split(',').map(s => s.trim()).filter(Boolean);
+        }
+
+        // Profil rasmi
+        if (h.profileImg) {
+            document.getElementById('profilePhoto').src = h.profileImg;
+            document.getElementById('profilePhoto').classList.remove('hidden');
+            document.getElementById('defaultSvg').classList.add('hidden');
+        }
+
+        // --- STATS ---
+        if (h.stat1num) document.getElementById('stat1num').textContent = h.stat1num;
+        if (h.stat1txt) document.getElementById('stat1txt').textContent = h.stat1txt;
+        if (h.stat2num) document.getElementById('stat2num').textContent = h.stat2num;
+        if (h.stat2txt) document.getElementById('stat2txt').textContent = h.stat2txt;
+        if (h.stat3num) document.getElementById('stat3num').textContent = h.stat3num;
+        if (h.stat3txt) document.getElementById('stat3txt').textContent = h.stat3txt;
+        if (h.stat4num) document.getElementById('stat4num').textContent = h.stat4num;
+        if (h.stat4txt) document.getElementById('stat4txt').textContent = h.stat4txt;
+
+        // --- ABOUT ---
+        if (a.title) document.getElementById('aboutTitleDisplay').innerHTML = a.title.replace(' & ', ' & <span class="text-ethno-gold">') + '</span>';
+        if (a.p1) document.getElementById('aboutP1Display').textContent = a.p1;
+        if (a.p2) document.getElementById('aboutP2Display').textContent = a.p2;
+        if (a.cvLink && a.cvLink !== '#') document.getElementById('cvLinkDisplay').href = a.cvLink;
+
+        // --- SKILLS ---
+        if (data.skills && data.skills.length > 0) {
+            renderSkills(data.skills);
+        } else {
+            renderDefaultSkills();
+        }
+
+        // --- PROJECTS ---
+        if (data.projects && data.projects.length > 0) {
+            renderProjects(data.projects);
+        } else {
+            renderDefaultProjects();
+        }
+
+        // --- EXPERIENCE ---
+        if (data.experience && data.experience.length > 0) {
+            renderExperience(data.experience);
+        } else {
+            renderDefaultExperience();
+        }
+
+        // --- CONTACT ---
+        if (c.email) {
+            const el = document.getElementById('emailLinkDisplay');
+            el.href = 'mailto:' + c.email;
+            el.textContent = c.email;
+        }
+        if (c.telegram) {
+            const el = document.getElementById('tgLinkDisplay');
+            const tg = c.telegram.replace('@','');
+            el.href = 'https://t.me/' + tg;
+            el.textContent = c.telegram.startsWith('@') ? c.telegram : '@' + c.telegram;
+            document.getElementById('footerTelegram').href = 'https://t.me/' + tg;
+        }
+        if (c.github && c.github !== '#') {
+            document.getElementById('githubLinkDisplay').href = c.github;
+            document.getElementById('footerGithub').href = c.github;
+        }
+        if (c.linkedin && c.linkedin !== '#') {
+            document.getElementById('linkedinLinkDisplay').href = c.linkedin;
+            document.getElementById('footerLinkedin').href = c.linkedin;
+        }
+        if (c.location) {
+            document.getElementById('locationDisplay').classList.remove('hidden');
+            document.getElementById('locationText').textContent = c.location;
+        }
+    }
+
+    // ─── SKILLS RENDER ────────────────────────────────────────────────────────
+    function renderSkills(skills) {
+        const container = document.getElementById('skillsDisplay');
+        container.innerHTML = '';
+        skills.forEach((sk, i) => {
+            const color = i % 2 === 0 ? '#00D1B2' : '#DFB15B';
+            const colorClass = i % 2 === 0 ? 'text-ethno-accent' : 'text-ethno-gold';
+            container.innerHTML += `
+                <div class="space-y-1">
+                    <div class="flex justify-between text-sm font-bold text-slate-700 dark:text-slate-300">
+                        <span>${sk.name}</span>
+                        <span class="${colorClass}">${sk.pct}%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="skill-bar-fill h-full rounded-full" style="width:0%;background:${color}" data-target="${sk.pct}"></div>
+                    </div>
+                </div>`;
+        });
+        animateSkillBars();
+    }
+
+    function renderDefaultSkills() {
+        renderSkills([
+            { name:'Frontend (HTML, CSS, Tailwind, JS/React)', pct:90 },
+            { name:'Backend (Node.js, Express, C++)', pct:85 },
+            { name:"Ma'lumotlar bazasi (PostgreSQL, MongoDB, SQL)", pct:80 },
+            { name:'Tizim arxitekturasi va UI/UX Dizayn', pct:75 }
+        ]);
+    }
+
+    function animateSkillBars() {
+        setTimeout(() => {
+            document.querySelectorAll('.skill-bar-fill').forEach(bar => {
+                bar.style.width = bar.dataset.target + '%';
+            });
+        }, 300);
+    }
+
+    // ─── PROJECTS RENDER ──────────────────────────────────────────────────────
+    function renderProjects(projects) {
+        const grid = document.getElementById('projectsGrid');
+        grid.innerHTML = '';
+        const iconMap = { web:'fa-globe', desktop:'fa-desktop', design:'fa-compass-drafting' };
+        const colorMap = { web:'accent', desktop:'gold', design:'accent' };
+
+        projects.forEach(proj => {
+            const icon = iconMap[proj.category] || 'fa-code';
+            const col = colorMap[proj.category] || 'accent';
+            const accentColor = col === 'gold' ? '#DFB15B' : '#00D1B2';
+            const badgeBg = col === 'gold' ? 'bg-ethno-gold/15 text-ethno-gold' : 'bg-ethno-accent/15 text-ethno-accent';
+            const techs = (proj.techs || '').split(',').map(t => t.trim()).filter(Boolean);
+
+            const imgHtml = proj.image
+                ? `<img src="${proj.image}" alt="${proj.title}" class="w-full h-full object-cover">`
+                : `<i class="fa-solid ${icon} text-6xl" style="color:${accentColor}"></i>`;
+
+            const card = document.createElement('div');
+            card.className = 'project-card-item bg-white dark:bg-ethno-cardDark rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:translate-y-[-6px] transition-all duration-300';
+            card.setAttribute('data-category', proj.category || 'web');
+            card.setAttribute('data-title', (proj.title || '').toLowerCase());
+
+            card.innerHTML = `
+                <div class="h-48 bg-gradient-to-tr from-slate-800 to-slate-700/50 relative flex items-center justify-center p-6 overflow-hidden">
+                    ${imgHtml}
+                    <span class="absolute top-4 right-4 ${badgeBg} text-xs font-bold px-3 py-1 rounded-full uppercase">${proj.badge || proj.category}</span>
+                </div>
+                <div class="p-6 space-y-4">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">${proj.title}</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">${proj.desc}</p>
+                    <div class="flex flex-wrap gap-2">
+                        ${techs.map(t => `<span class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-500 px-2.5 py-1 rounded-md">${t}</span>`).join('')}
+                    </div>
+                    <button class="open-details-btn text-ethno-gold hover:text-ethno-accent font-semibold text-sm flex items-center space-x-1"
+                        data-title="${proj.title}" data-category="${proj.badge||proj.category}"
+                        data-desc="${(proj.desc||'').replace(/"/g,'&quot;')}"
+                        data-techs="${(proj.techs||'')}"
+                        data-link="${proj.demoLink||'#'}">
+                        <span>Batafsil ko'rish</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>`;
+            grid.appendChild(card);
+        });
+
+        initProjectFilters();
+        initModals();
+    }
+
+    function renderDefaultProjects() {
+        renderProjects([
+            { id:1, title:'Focus Guard', category:'web', badge:'Veb ilova', desc:'Talaba va muhandislar uchun diqqat va unumdorlikni boshqaruvchi platform.', techs:'Tailwind, Vue.js', demoLink:'#', image:'' },
+            { id:2, title:'Hotel Admin System', category:'desktop', badge:'Desktop', desc:"Mehmonxona xonalarini bron qilish va to'lovlarni yurituvchi desktop ilova.", techs:'C++, SQL', demoLink:'#', image:'' },
+            { id:3, title:'Ethno-Uz UI Kit', category:'design', badge:'UI/UX dizayn', desc:"An'anaviy o'zbek me'morchiligi asosida ishlangan interaktiv komponentlar.", techs:'Figma, Creative Design', demoLink:'#', image:'' }
+        ]);
+    }
+
+    // ─── EXPERIENCE RENDER ────────────────────────────────────────────────────
+    function renderExperience(list) {
+        const container = document.getElementById('experienceDisplay');
+        container.innerHTML = '';
+        list.forEach((ex, i) => {
+            const color = i % 2 === 0 ? 'bg-ethno-accent text-ethno-accent' : 'bg-ethno-gold text-ethno-gold';
+            const dotColor = i % 2 === 0 ? 'bg-ethno-accent' : 'bg-ethno-gold';
+            const labelColor = i % 2 === 0 ? 'text-ethno-accent' : 'text-ethno-gold';
+            const badgeColor = i % 2 === 0 ? 'text-ethno-gold' : 'text-ethno-accent';
+
+            container.innerHTML += `
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full ${dotColor} border-4 border-slate-900"></div>
+                    <div class="md:absolute md:left-[-150px] md:top-1 text-sm font-bold ${labelColor} md:w-32 md:text-right">
+                        ${ex.period}
+                    </div>
+                    <div class="bg-white dark:bg-ethno-cardDark p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                        <span class="text-xs ${badgeColor} font-bold uppercase tracking-widest">${ex.company}</span>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">${ex.role}</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">${ex.desc}</p>
+                    </div>
+                </div>`;
+        });
+    }
+
+    function renderDefaultExperience() {
+        renderExperience([
+            { period:'2024 - Hozir', company:'Kompaniya nomi', role:'Senior Frontend Dasturchi', desc:"Veb-ilovalarning yuklanish tezligini 40% ga optimizatsiya qilish.", type:'work' },
+            { period:'2022 - 2024', company:'IT Markaz va Startaplar', role:'Full-Stack Muhandis', desc:"Yirik logistika va mehmonxona tizimlari uchun back-end arxitekturasini loyihalash.", type:'work' },
+            { period:'2018 - 2022', company:"Universitet ta'limi", role:'TATU - Amaliy Informatika', desc:"Algoritmlar va ma'lumotlar tuzilmalari bo'yicha fundamental bilimlarni o'zlashtirish.", type:'edu' }
+        ]);
+    }
+
+    // ─── PROJECT FILTER ───────────────────────────────────────────────────────
+    function initProjectFilters() {
+        const searchInput = document.getElementById('projectSearch');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        function filterProjects() {
+            const query = searchInput.value.toLowerCase().trim();
+            const active = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+            document.querySelectorAll('.project-card-item').forEach(card => {
+                const matchQ = card.getAttribute('data-title').includes(query);
+                const matchC = active === 'all' || card.getAttribute('data-category') === active;
+                card.style.display = matchQ && matchC ? 'block' : 'none';
+            });
+        }
+
+        searchInput.addEventListener('input', filterProjects);
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('active','bg-ethno-accent','text-slate-950');
+                    b.classList.add('bg-white','dark:bg-ethno-cardDark','text-slate-700','dark:text-slate-300');
+                });
+                btn.classList.add('active','bg-ethno-accent','text-slate-950');
+                btn.classList.remove('bg-white','dark:bg-ethno-cardDark','text-slate-700','dark:text-slate-300');
+                filterProjects();
+            });
+        });
+    }
+
+    // ─── MODALS ───────────────────────────────────────────────────────────────
+    function initModals() {
+        const modal = document.getElementById('projectModal');
+        const modalContent = document.getElementById('modalContent');
+
+        document.querySelectorAll('.open-details-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const techs = btn.dataset.techs.split(',').map(t => t.trim()).filter(Boolean);
+                modalContent.innerHTML = `
+                    <div class="space-y-4">
+                        <span class="text-xs text-ethno-accent font-bold uppercase tracking-wider">${btn.dataset.category}</span>
+                        <h3 class="text-2xl font-bold text-slate-900 dark:text-white">${btn.dataset.title}</h3>
+                        <p class="text-slate-600 dark:text-slate-400">${btn.dataset.desc}</p>
+                        <div class="space-y-2">
+                            <span class="block text-sm font-bold text-slate-800 dark:text-slate-200">Ishlatilgan texnologiyalar:</span>
+                            <div class="flex flex-wrap gap-2">
+                                ${techs.map(t => `<span class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold px-3 py-1 rounded-md">${t}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="pt-4">
+                            <a href="${btn.dataset.link}" class="px-5 py-2.5 rounded-lg bg-ethno-accent text-slate-950 font-bold hover:scale-105 transition-transform inline-block">Loyihani ko'rish</a>
+                        </div>
+                    </div>`;
+                modal.classList.remove('hidden');
+            });
+        });
+
+        document.getElementById('closeModal').addEventListener('click', () => modal.classList.add('hidden'));
+        modal.addEventListener('click', e => { if (e.target === modal) modal.classList.add('hidden'); });
+    }
+
+    // ─── TYPING ───────────────────────────────────────────────────────────────
+    let typingPhrases = ["Frontend Dasturchi", "UI/UX Dizayner"];
+    let phraseIdx = 0, charIdx = 0, isDeleting = false;
+    const typingEl = document.getElementById('typing-text');
+
+    function type() {
+        const current = typingPhrases[phraseIdx] || '';
+        typingEl.textContent = isDeleting ? current.substring(0, charIdx-1) : current.substring(0, charIdx+1);
+        isDeleting ? charIdx-- : charIdx++;
+        let delay = 100;
+        if (!isDeleting && charIdx === current.length) { delay = 2000; isDeleting = true; }
+        else if (isDeleting && charIdx === 0) { isDeleting = false; phraseIdx = (phraseIdx+1) % typingPhrases.length; delay = 500; }
+        setTimeout(type, delay);
+    }
+
+    // ─── TESTIMONIALS ─────────────────────────────────────────────────────────
+    const testimonials = [
+        { name:"Jasur Qodirov", role:"Apex Express startapi rahbari", quote:"Ziyo bilan ishlash ajoyib tajriba bo'ldi. U bizning logistika tizimimiz uchun aqliy tizim arxitekturasini qisqa vaqtda ishlab chiqdi. Bizning unumdorlik darajasi 150% gacha oshdi." },
+        { name:"Madina Axmedova", role:"UzDecor Studio asoschisi", quote:"Bizga an'anaviy sharqona dizayn va zamonaviy funksionallikni o'zida birlashtirgan sayt kerak edi. U ishimizni a'lo darajada bajardi. Mijozlarimiz sayt dizayniga doimo qoyil qolishmoqda." }
+    ];
+    let activeTestimonialIdx = 0;
+
+    function renderTestimonial() {
+        const d = testimonials[activeTestimonialIdx];
+        document.getElementById('testimonialContainer').innerHTML = `
+            <div class="space-y-6">
+                <p class="text-lg md:text-xl italic text-slate-700 dark:text-slate-300 leading-relaxed">"${d.quote}"</p>
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-full bg-ethno-accent/20 flex items-center justify-center text-ethno-accent font-extrabold text-xl">${d.name.charAt(0)}</div>
+                    <div>
+                        <span class="block font-bold text-slate-900 dark:text-white text-base">${d.name}</span>
+                        <span class="block text-xs text-slate-400 font-medium">${d.role}</span>
+                    </div>
+                </div>
+            </div>`;
+    }
+
+    // ─── THEME ────────────────────────────────────────────────────────────────
+    const html = document.documentElement;
+    if (localStorage.theme === 'light') html.classList.remove('dark');
+    else html.classList.add('dark');
+
+    document.getElementById('themeToggle').addEventListener('click', () => {
+        html.classList.toggle('dark');
+        localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
+    });
+
+    // ─── MOBILE NAV ───────────────────────────────────────────────────────────
+    document.getElementById('menuToggle').addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.toggle('hidden');
+    });
+    document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.add('hidden');
+    }));
+
+    // ─── CONTACT FORM ─────────────────────────────────────────────────────────
+    document.getElementById('contactForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const toast = document.getElementById('toast');
+        contactForm.reset();
+        toast.classList.remove('translate-y-10','opacity-0','pointer-events-none');
+        toast.classList.add('translate-y-0','opacity-100');
+        setTimeout(() => {
+            toast.classList.add('translate-y-10','opacity-0','pointer-events-none');
+            toast.classList.remove('translate-y-0','opacity-100');
+        }, 4000);
+    });
+
+    // ─── INIT ─────────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+        loadPortfolioData();
+        type();
+        renderTestimonial();
+        document.getElementById('nextTestimonial').addEventListener('click', () => {
+            activeTestimonialIdx = (activeTestimonialIdx+1) % testimonials.length;
+            renderTestimonial();
+        });
+        document.getElementById('prevTestimonial').addEventListener('click', () => {
+            activeTestimonialIdx = (activeTestimonialIdx-1+testimonials.length) % testimonials.length;
+            renderTestimonial();
+        });
+    });
+    </script>
+</body>
+</html>
